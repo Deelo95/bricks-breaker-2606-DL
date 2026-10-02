@@ -59,8 +59,10 @@ bool Game::Update()
 	if (GetAsyncKeyState(VK_LEFT) && paddle.x_position > 0)
 		paddle.x_position -= 2;
 
-	if (GetAsyncKeyState(VK_SPACE) & 0x1)
+	if (!gameOver && (GetAsyncKeyState(VK_SPACE) & 0x1))
+	{
 		ball.moving = !ball.moving;
+	}
 
 	if (GetAsyncKeyState('R') & 0x1)
 		Reset();
