@@ -73,6 +73,9 @@ bool Game::Update()
 //  All rendering, including text, should occur in the Render function
 void Game::Render() const
 {
+	Console::Lock(true);
+	Console::Clear();
+
 	if (gameOver && playerWon)
 	{
 		const char* message = "You win! Press 'R' to play again.";
@@ -93,8 +96,6 @@ void Game::Render() const
 		Console::SetCursorPosition(x, y);
 		std::cout << message;
 	}
-	Console::Lock(true);
-	Console::Clear();
 
 	paddle.Draw();
 	ball.Draw();
