@@ -17,4 +17,6 @@ public:
 	void Reset();
 	void ResetBall();
 	void CheckCollision();
+	bool gameOver = false;
+	bool playerWon = false;
 };

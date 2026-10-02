@@ -18,8 +18,12 @@ void Game::Reset()
 	ball.visage = 'O';
 	ball.color = ConsoleColor::Cyan;
 	ResetBall();
+	gameOver = false;
+	playerWon = false;
 
 	// TODO #2 - Add this brick and 4 more bricks to the vector
+	bricks.clear();
+
 	for (int i = 0; i < 5; i++) {
 
 		Box brick;
@@ -69,6 +73,26 @@ bool Game::Update()
 //  All rendering, including text, should occur in the Render function
 void Game::Render() const
 {
+	if (gameOver && playerWon)
+	{
+		const char* message = "You win! Press 'R' to play again.";
+
+		int x = (Console::WindowWidth() - strlen(message)) / 2;
+		int y = Console::WindowHeight() / 2;
+
+		Console::SetCursorPosition(x, y);
+		std::cout << message;
+	}
+	else if (gameOver && !playerWon)
+	{
+		const char* message = "You lose. Press 'R' to play again.";
+
+		int x = (Console::WindowWidth() - strlen(message)) / 2;
+		int y = Console::WindowHeight() / 2;
+
+		Console::SetCursorPosition(x, y);
+		std::cout << message;
+	}
 	Console::Lock(true);
 	Console::Clear();
 
@@ -93,7 +117,7 @@ void Game::CheckCollision() {
 				ball.y_velocity *= -1;
 
 			if (bricks[i].color == ConsoleColor::Black){
-					bricks.erase(bricks.begin() + 1);
+					bricks.erase(bricks.begin() + i);
 			}
 
 			break;
@@ -101,7 +125,12 @@ void Game::CheckCollision() {
 	}
 
 	// TODO #6 - If no bricks remain, pause ball and display (render) victory text with R to reset
-
+	if (bricks.empty())
+	{
+		ball.moving = false;
+		gameOver = true;
+		playerWon = true;
+	}
 
 	if (paddle.Contains(ball.x_position + ball.x_velocity, ball.y_velocity + ball.y_position))
 	{
@@ -109,4 +138,10 @@ void Game::CheckCollision() {
 	}
 
 	// TODO #7 - If ball touches bottom of window, pause ball and display (render) defeat text with R to reset
+	if (ball.y_position >= Console::WindowHeight() - 1)
+	{
+		ball.moving = false;
+		gameOver = true;
+		playerWon = false;
+	}
 }
